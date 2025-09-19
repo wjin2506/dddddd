@@ -47,8 +47,8 @@ const DemoForm = () => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB limit per file (Business Plan)
-    const MAX_TOTAL_SIZE = 30 * 1024 * 1024; // Total 30MB limit (Business Plan)
+    const MAX_FILE_SIZE = 35 * 1024; // 35KB limit (EmailJS API 50KB limit)
+    const MAX_TOTAL_SIZE = 35 * 1024; // Total 35KB limit (EmailJS API restriction)
 
     // Calculate current total size
     const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
@@ -58,12 +58,12 @@ const DemoForm = () => {
 
     for (const file of files) {
       if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push(`${file.name} exceeds 30MB limit`);
+        errorMessages.push(`${file.name} exceeds 35KB limit (EmailJS API restriction)`);
         continue;
       }
 
       if (currentTotalSize + file.size > MAX_TOTAL_SIZE) {
-        errorMessages.push(`Total file size would exceed 30MB limit`);
+        errorMessages.push(`Total file size would exceed 35KB limit (EmailJS API restriction)`);
         break;
       }
 
@@ -247,7 +247,9 @@ const DemoForm = () => {
                   <p className="upload-subtext">BUSINESS OUTCOMES</p>
                   <p className="upload-instruction">Click to upload files or drag and drop</p>
                   <p className="upload-limit" style={{ color: '#ff0000', fontSize: '12px', marginTop: '5px' }}>
-                    ⚠️ Maximum file size: 30MB (EmailJS Business Plan)
+                    ⚠️ Maximum file size: 35KB (EmailJS API limit: 50KB)
+                    <br/>
+                    <span style={{ fontSize: '11px', color: '#666' }}>큰 파일은 Google Drive나 Dropbox 링크를 프로젝트 설명에 추가해주세요</span>
                   </p>
                 </label>
               </div>
