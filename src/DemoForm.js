@@ -47,8 +47,8 @@ const DemoForm = () => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB limit per file
-    const MAX_TOTAL_SIZE = 30 * 1024 * 1024; // Total 30MB limit
+    const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB limit per file (Business Plan)
+    const MAX_TOTAL_SIZE = 30 * 1024 * 1024; // Total 30MB limit (Business Plan)
 
     // Calculate current total size
     const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
@@ -247,7 +247,7 @@ const DemoForm = () => {
                   <p className="upload-subtext">BUSINESS OUTCOMES</p>
                   <p className="upload-instruction">Click to upload files or drag and drop</p>
                   <p className="upload-limit" style={{ color: '#ff0000', fontSize: '12px', marginTop: '5px' }}>
-                    ⚠️ Maximum file size: 30MB per file
+                    ⚠️ Maximum file size: 30MB (EmailJS Business Plan)
                   </p>
                 </label>
               </div>
