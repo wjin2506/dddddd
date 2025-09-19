@@ -47,8 +47,8 @@ const DemoForm = () => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit for Professional Plan
-    const MAX_TOTAL_SIZE = 5 * 1024 * 1024; // Total 5MB limit
+    const MAX_FILE_SIZE = 30 * 1024; // 30KB limit (EmailJS has 50KB variable limit)
+    const MAX_TOTAL_SIZE = 30 * 1024; // Total 30KB limit to avoid EmailJS 413 error
 
     // Calculate current total size
     const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
@@ -58,12 +58,12 @@ const DemoForm = () => {
 
     for (const file of files) {
       if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push(`${file.name} exceeds 5MB limit`);
+        errorMessages.push(`${file.name} exceeds 30KB limit (EmailJS restriction)`);
         continue;
       }
 
       if (currentTotalSize + file.size > MAX_TOTAL_SIZE) {
-        errorMessages.push(`Total file size would exceed 5MB limit`);
+        errorMessages.push(`Total file size would exceed 30KB limit (EmailJS restriction)`);
         break;
       }
 
@@ -119,23 +119,24 @@ const DemoForm = () => {
         publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Bs3S7OwEc3Sp9TCxs'
       });
 
-      // Convert files to Base64 for attachment
+      // Convert files to Base64 for Dynamic Attachments
       let attachments = [];
       if (uploadedFiles.length > 0) {
-        console.log('Converting files to Base64...');
+        console.log('Converting files to Base64 for Dynamic Attachments...');
         for (const fileObj of uploadedFiles) {
           try {
             const base64Data = await convertToBase64(fileObj.file);
+            // Format for EmailJS Dynamic Attachments
             attachments.push({
-              name: fileObj.name,
+              filename: fileObj.name,
               content: base64Data.split(',')[1], // Remove data:type;base64, prefix
-              type: fileObj.type || 'application/octet-stream'
+              encoding: 'base64'
             });
           } catch (error) {
             console.error(`Failed to convert file ${fileObj.name}:`, error);
           }
         }
-        console.log(`Converted ${attachments.length} files successfully`);
+        console.log(`Converted ${attachments.length} files successfully for Dynamic Attachments`);
       }
 
       // 이메일 템플릿에 전달할 데이터 준비 (EmailJS 템플릿 변수에 맞춤)
@@ -158,7 +159,7 @@ const DemoForm = () => {
         reply_to: formData.businessEmail,
         message: formData.projectInfo || '프로젝트 설명이 제공되지 않았습니다.',
         // Add attachments if available (requires EmailJS Professional plan)
-        attachments: attachments.length > 0 ? JSON.stringify(attachments) : null
+        attachments: attachments.length > 0 ? attachments : undefined
       };
 
       console.log('Sending email with data:', emailData);
