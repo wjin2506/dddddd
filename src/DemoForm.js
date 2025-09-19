@@ -47,8 +47,8 @@ const DemoForm = () => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const MAX_FILE_SIZE = 35 * 1024; // 35KB limit (EmailJS API 50KB limit)
-    const MAX_TOTAL_SIZE = 35 * 1024; // Total 35KB limit (EmailJS API restriction)
+    const MAX_FILE_SIZE = 50 * 1024; // 50KB limit per file
+    const MAX_TOTAL_SIZE = 50 * 1024; // Total 50KB limit
 
     // Calculate current total size
     const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
@@ -58,12 +58,12 @@ const DemoForm = () => {
 
     for (const file of files) {
       if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push(`${file.name} exceeds 35KB limit (EmailJS API restriction)`);
+        errorMessages.push(`${file.name}이(가) 50KB를 초과합니다`);
         continue;
       }
 
       if (currentTotalSize + file.size > MAX_TOTAL_SIZE) {
-        errorMessages.push(`Total file size would exceed 35KB limit (EmailJS API restriction)`);
+        errorMessages.push(`전체 파일 크기가 50KB를 초과합니다`);
         break;
       }
 
@@ -247,9 +247,7 @@ const DemoForm = () => {
                   <p className="upload-subtext">BUSINESS OUTCOMES</p>
                   <p className="upload-instruction">Click to upload files or drag and drop</p>
                   <p className="upload-limit" style={{ color: '#ff0000', fontSize: '12px', marginTop: '5px' }}>
-                    ⚠️ Maximum file size: 35KB (EmailJS API limit: 50KB)
-                    <br/>
-                    <span style={{ fontSize: '11px', color: '#666' }}>큰 파일은 Google Drive나 Dropbox 링크를 프로젝트 설명에 추가해주세요</span>
+                    ⚠️ 파일 크기 제한: 50KB
                   </p>
                 </label>
               </div>
