@@ -71,6 +71,13 @@ const DemoForm = () => {
     setIsSubmitting(true);
 
     try {
+      // 디버깅을 위한 환경변수 확인
+      console.log('EmailJS Configuration:', {
+        service: process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_oh96wzb',
+        template: process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_53307ep',
+        publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Bu5XOwkzSj9fTCs'
+      });
+
       // 이메일 템플릿에 전달할 데이터 준비 (EmailJS 템플릿 변수에 맞춤)
       const emailData = {
         from_name: `${formData.firstName} ${formData.lastName}`,
@@ -85,8 +92,14 @@ const DemoForm = () => {
           : '첨부파일이 없습니다.',
         opt_product_updates: formData.optInProductUpdates ? '예' : '아니요',
         opt_sales_outreach: formData.optInSalesOutreach ? '예' : '아니요',
-        opt_events: formData.optInEvents ? '예' : '아니요'
+        opt_events: formData.optInEvents ? '예' : '아니요',
+        // EmailJS 기본 변수 추가 (일부 템플릿에서 필요할 수 있음)
+        to_name: 'VMS Holdings',
+        reply_to: formData.businessEmail,
+        message: formData.projectInfo || '프로젝트 설명이 제공되지 않았습니다.'
       };
+
+      console.log('Sending email with data:', emailData);
 
       // EmailJS로 이메일 전송
       const result = await emailjs.send(
@@ -120,7 +133,25 @@ const DemoForm = () => {
       setUploadedFiles([]);
     } catch (error) {
       console.error('Email sending failed:', error);
-      alert('Failed to submit demo request. Please try again or contact us directly at vmsholdings@vmsforsea.com');
+      console.error('Error details:', {
+        status: error.status,
+        text: error.text,
+        message: error.message
+      });
+
+      // 더 구체적인 에러 메시지
+      let errorMessage = 'Failed to submit demo request. ';
+      if (error.status === 400) {
+        errorMessage += 'Invalid template or service ID. Please check EmailJS configuration.';
+      } else if (error.status === 401) {
+        errorMessage += 'Authentication failed. Please check EmailJS public key.';
+      } else if (error.status === 422) {
+        errorMessage += 'Template variables do not match. Please check template configuration.';
+      } else {
+        errorMessage += 'Please try again or contact us directly at vmsholdings@vmsforsea.com';
+      }
+
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

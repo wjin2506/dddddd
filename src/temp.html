@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ffffff;
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 1.75rem;
+      }
+      .content {
+        padding: 2rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 3rem;
+        }
+      }
+      .info-section {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+      .info-section h2 {
+        color: #667eea;
+        font-size: 1.25rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+      .info-item {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .info-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .label {
+        font-weight: 600;
+        color: #666;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+      }
+      .value {
+        color: #333;
+        font-size: 1rem;
+      }
+      .message-section {
+        background-color: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+      }
+      .message-section h2 {
+        color: #333;
+        font-size: 1.25rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+      .message-content {
+        color: #555;
+        white-space: pre-wrap;
+        line-height: 1.8;
+      }
+      .footer {
+        background-color: #f8f9fa;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        color: #666;
+        font-size: 0.875rem;
+        border-top: 1px solid #e0e0e0;
+      }
+      .footer a {
+        color: #667eea;
+        text-decoration: none;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background-color: #667eea;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+      }
+      .timestamp {
+        color: #999;
+        font-size: 0.75rem;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🚢 VMS Holdings - 새로운 문의</h1>
+        <p style="margin: 0.5rem 0 0 0; opacity: 0.9">B2B 해운 솔루션 문의</p>
+      </div>
+
+      <div class="content">
+        <div class="grid">
+          <!-- 왼쪽 컬럼: 고객 정보 -->
+          <div class="info-section">
+            <h2>📋 고객 정보</h2>
+
+            <div class="info-item">
+              <div class="label">이름</div>
+              <div class="value">{{from_name}}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="label">회사명</div>
+              <div class="value">{{company}}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="label">이메일</div>
+              <div class="value">
+                <a
+                  href="mailto:{{from_email}}"
+                  style="color: #667eea; text-decoration: none"
+                  >{{from_email}}</a
+                >
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="label">전화번호</div>
+              <div class="value">{{phone}}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="label">관심 서비스</div>
+              <div class="value">
+                <span class="badge">{{service_type}}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 오른쪽 컬럼: 문의 내용 -->
+          <div class="message-section">
+            <h2>💬 문의 내용</h2>
+            <div class="message-content">{{message}}</div>
+          </div>
+        </div>
+
+        <div class="timestamp">문의 접수 시간: {{current_date}}</div>
+      </div>
+
+      <div class="footer">
+        <p>
+          이 이메일은 VMS Holdings 웹사이트의 문의 폼을 통해 자동으로
+          전송되었습니다.
+        </p>
+        <p>빠른 시일 내에 담당자가 연락드리겠습니다.</p>
+        <p>
+          <a href="mailto:{{from_email}}">답변하기 →</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
