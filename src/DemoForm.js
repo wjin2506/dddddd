@@ -45,10 +45,41 @@ const DemoForm = () => {
     }));
   };
 
+  // Cloudinary upload function
+  const uploadToCloudinary = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET || 'ml_default');
+
+      const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || 'your_cloud_name';
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        console.log('File uploaded successfully to Cloudinary:', data.secure_url);
+        return data.secure_url;
+      } else {
+        console.error('Cloudinary upload failed:', data);
+        return null;
+      }
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      return null;
+    }
+  };
+
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const MAX_FILE_SIZE = 50 * 1024; // 50KB limit per file
-    const MAX_TOTAL_SIZE = 50 * 1024; // Total 50KB limit
+    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB limit per file (Firebase free tier)
+    const MAX_TOTAL_SIZE = 500 * 1024 * 1024; // Total 500MB limit
 
     // Calculate current total size
     const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
@@ -58,12 +89,12 @@ const DemoForm = () => {
 
     for (const file of files) {
       if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push(`${file.name}이(가) 50KB를 초과합니다`);
+        errorMessages.push(`${file.name}이(가) 100MB를 초과합니다`);
         continue;
       }
 
       if (currentTotalSize + file.size > MAX_TOTAL_SIZE) {
-        errorMessages.push(`전체 파일 크기가 50KB를 초과합니다`);
+        errorMessages.push(`전체 파일 크기가 500MB를 초과합니다`);
         break;
       }
 
@@ -72,7 +103,9 @@ const DemoForm = () => {
         name: file.name,
         size: file.size,
         type: file.type,
-        file: file
+        file: file,
+        uploadStatus: 'pending', // pending, uploading, completed, failed
+        url: null
       });
     }
 
@@ -119,24 +152,29 @@ const DemoForm = () => {
         publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Bs3S7OwEc3Sp9TCxs'
       });
 
-      // Convert files to Base64 for Dynamic Attachments
-      let attachments = [];
+      // Upload ALL files to Cloudinary (EmailJS has 50KB total limit)
+      let fileUrls = [];
+
       if (uploadedFiles.length > 0) {
-        console.log('Converting files to Base64 for Dynamic Attachments...');
+        console.log('Uploading all files to Cloudinary...');
+
         for (const fileObj of uploadedFiles) {
           try {
-            const base64Data = await convertToBase64(fileObj.file);
-            // Format for EmailJS Dynamic Attachments
-            attachments.push({
-              filename: fileObj.name,
-              content: base64Data.split(',')[1], // Remove data:type;base64, prefix
-              encoding: 'base64'
-            });
+            const url = await uploadToCloudinary(fileObj.file);
+            if (url) {
+              fileUrls.push({
+                name: fileObj.name,
+                size: formatFileSize(fileObj.size),
+                url: url
+              });
+              console.log(`File ${fileObj.name} uploaded to Cloudinary: ${url}`);
+            }
           } catch (error) {
-            console.error(`Failed to convert file ${fileObj.name}:`, error);
+            console.error(`Failed to upload ${fileObj.name} to Cloudinary:`, error);
           }
         }
-        console.log(`Converted ${attachments.length} files successfully for Dynamic Attachments`);
+
+        console.log(`Uploaded ${fileUrls.length} of ${uploadedFiles.length} files to Cloudinary`);
       }
 
       // 이메일 템플릿에 전달할 데이터 준비 (EmailJS 템플릿 변수에 맞춤)
@@ -151,15 +189,19 @@ const DemoForm = () => {
         files_info: uploadedFiles.length > 0
           ? uploadedFiles.map(file => `${file.name} (${formatFileSize(file.size)})`).join(', ')
           : '첨부파일이 없습니다.',
-        opt_product_updates: formData.optInProductUpdates ? '예' : '아니요',
-        opt_sales_outreach: formData.optInSalesOutreach ? '예' : '아니요',
-        opt_events: formData.optInEvents ? '예' : '아니요',
+        // Add Cloudinary URLs if available
+        file_links: fileUrls.length > 0
+          ? fileUrls.map(f => `${f.name} (${f.size}): ${f.url}`).join('\n\n')
+          : '',
+        opt_product_updates: formData.optInProductUpdates ? '예' : '아니오',
+        opt_sales_outreach: formData.optInSalesOutreach ? '예' : '아니오',
+        opt_events: formData.optInEvents ? '예' : '아니오',
         // EmailJS 기본 변수 추가 (일부 템플릿에서 필요할 수 있음)
         to_name: 'VMS Holdings',
         reply_to: formData.businessEmail,
         message: formData.projectInfo || '프로젝트 설명이 제공되지 않았습니다.',
-        // Add attachments if available (requires EmailJS Professional plan)
-        attachments: attachments.length > 0 ? attachments : undefined
+        // No attachments - all files uploaded to Cloudinary
+        // attachments: undefined  // Removed to avoid EmailJS size limit
       };
 
       console.log('Sending email with data:', emailData);
@@ -246,8 +288,8 @@ const DemoForm = () => {
                   <p className="upload-text">ACQUIRE YOUR BUSINESS CASE ENABLED FASTER</p>
                   <p className="upload-subtext">BUSINESS OUTCOMES</p>
                   <p className="upload-instruction">Click to upload files or drag and drop</p>
-                  <p className="upload-limit" style={{ color: '#ff0000', fontSize: '12px', marginTop: '5px' }}>
-                    ⚠️ 파일 크기 제한: 50KB
+                  <p className="upload-limit" style={{ color: '#4CAF50', fontSize: '12px', marginTop: '5px' }}>
+                    ✓ 파일 크기 제한: 100MB (Cloudinary Free)
                   </p>
                 </label>
               </div>
