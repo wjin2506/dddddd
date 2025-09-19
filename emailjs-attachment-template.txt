@@ -1,0 +1,121 @@
+=====================================
+EmailJS Template for File Attachments (Professional Plan)
+=====================================
+
+IMPORTANT: This requires EmailJS Professional Plan ($18/month) or higher for file attachments.
+
+=====================================
+Template Settings in EmailJS Dashboard:
+=====================================
+
+1. Go to EmailJS Dashboard > Email Templates
+2. Edit your template (template_53307ep)
+3. Enable "Allow attachments" option in template settings
+4. Use the following template:
+
+=====================================
+Subject Line:
+=====================================
+Demo Request from {{from_name}} - {{company}}
+
+=====================================
+Email Body (HTML):
+=====================================
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+  <h2 style="color: #1a73e8;">New Demo Request</h2>
+
+  <h3>Contact Information</h3>
+  <table style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 8px; background: #f5f5f5;"><strong>Name:</strong></td>
+      <td style="padding: 8px;">{{from_name}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; background: #f5f5f5;"><strong>Email:</strong></td>
+      <td style="padding: 8px;"><a href="mailto:{{from_email}}">{{from_email}}</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; background: #f5f5f5;"><strong>Phone:</strong></td>
+      <td style="padding: 8px;">{{phone}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; background: #f5f5f5;"><strong>Job Title:</strong></td>
+      <td style="padding: 8px;">{{job_title}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; background: #f5f5f5;"><strong>Company:</strong></td>
+      <td style="padding: 8px;">{{company}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; background: #f5f5f5;"><strong>Country:</strong></td>
+      <td style="padding: 8px;">{{country}}</td>
+    </tr>
+  </table>
+
+  <h3>Project Description</h3>
+  <div style="background: #f0f7ff; padding: 15px; border-radius: 5px;">
+    {{project_description}}
+  </div>
+
+  <h3>Attached Files</h3>
+  <div style="background: #fff3cd; padding: 10px; border-radius: 5px;">
+    {{files_info}}
+  </div>
+
+  <h3>Marketing Preferences</h3>
+  <ul>
+    <li>Product Updates: <strong>{{opt_product_updates}}</strong></li>
+    <li>Sales Outreach: <strong>{{opt_sales_outreach}}</strong></li>
+    <li>Event Invitations: <strong>{{opt_events}}</strong></li>
+  </ul>
+
+  <hr style="margin-top: 30px;">
+  <p style="color: #666; font-size: 12px;">
+    This email was sent from VMS Holdings Demo Request Form
+  </p>
+</div>
+
+=====================================
+Template Settings:
+=====================================
+
+To Email: vmsholdings@vmsforsea.com
+From Name: {{from_name}}
+From Email: (your email or service email)
+Reply To: {{from_email}}
+
+=====================================
+Attachments Configuration:
+=====================================
+
+For attachments to work:
+1. Enable "Allow attachments" in template settings
+2. The code sends attachments as JSON string in {{attachments}} variable
+3. EmailJS will automatically parse and attach the files
+
+The attachment format sent from code:
+[
+  {
+    "name": "filename.pdf",
+    "content": "base64_encoded_content",
+    "type": "application/pdf"
+  }
+]
+
+=====================================
+File Size Limits:
+=====================================
+
+Professional Plan: Maximum 5MB total attachment size
+Business Plan: Maximum 10MB total attachment size
+
+=====================================
+Testing:
+=====================================
+
+1. Make sure you're on Professional plan or higher
+2. Test with small files first (< 1MB)
+3. Check browser console for conversion logs
+4. Verify attachments appear in received emails
+
+=====================================

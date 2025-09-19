@@ -47,13 +47,42 @@ const DemoForm = () => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newFiles = files.map(file => ({
-      id: Date.now() + Math.random(),
-      name: file.name,
-      size: file.size,
-      file: file
-    }));
-    setUploadedFiles(prev => [...prev, ...newFiles]);
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit for Professional Plan
+    const MAX_TOTAL_SIZE = 5 * 1024 * 1024; // Total 5MB limit
+
+    // Calculate current total size
+    const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
+
+    const validFiles = [];
+    let errorMessages = [];
+
+    for (const file of files) {
+      if (file.size > MAX_FILE_SIZE) {
+        errorMessages.push(`${file.name} exceeds 5MB limit`);
+        continue;
+      }
+
+      if (currentTotalSize + file.size > MAX_TOTAL_SIZE) {
+        errorMessages.push(`Total file size would exceed 5MB limit`);
+        break;
+      }
+
+      validFiles.push({
+        id: Date.now() + Math.random(),
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        file: file
+      });
+    }
+
+    if (errorMessages.length > 0) {
+      alert(errorMessages.join('\n'));
+    }
+
+    if (validFiles.length > 0) {
+      setUploadedFiles(prev => [...prev, ...validFiles]);
+    }
   };
 
   const removeFile = (fileId) => {
@@ -68,6 +97,16 @@ const DemoForm = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  // Convert file to Base64
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -77,8 +116,27 @@ const DemoForm = () => {
       console.log('EmailJS Configuration:', {
         service: process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_oh96wzb',
         template: process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_53307ep',
-        publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Bu5XOwkzSj9fTCs'
+        publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Bs3S7OwEc3Sp9TCxs'
       });
+
+      // Convert files to Base64 for attachment
+      let attachments = [];
+      if (uploadedFiles.length > 0) {
+        console.log('Converting files to Base64...');
+        for (const fileObj of uploadedFiles) {
+          try {
+            const base64Data = await convertToBase64(fileObj.file);
+            attachments.push({
+              name: fileObj.name,
+              content: base64Data.split(',')[1], // Remove data:type;base64, prefix
+              type: fileObj.type || 'application/octet-stream'
+            });
+          } catch (error) {
+            console.error(`Failed to convert file ${fileObj.name}:`, error);
+          }
+        }
+        console.log(`Converted ${attachments.length} files successfully`);
+      }
 
       // 이메일 템플릿에 전달할 데이터 준비 (EmailJS 템플릿 변수에 맞춤)
       const emailData = {
@@ -98,7 +156,9 @@ const DemoForm = () => {
         // EmailJS 기본 변수 추가 (일부 템플릿에서 필요할 수 있음)
         to_name: 'VMS Holdings',
         reply_to: formData.businessEmail,
-        message: formData.projectInfo || '프로젝트 설명이 제공되지 않았습니다.'
+        message: formData.projectInfo || '프로젝트 설명이 제공되지 않았습니다.',
+        // Add attachments if available (requires EmailJS Professional plan)
+        attachments: attachments.length > 0 ? JSON.stringify(attachments) : null
       };
 
       console.log('Sending email with data:', emailData);
