@@ -246,6 +246,9 @@ const DemoForm = () => {
                   <p className="upload-text">ACQUIRE YOUR BUSINESS CASE ENABLED FASTER</p>
                   <p className="upload-subtext">BUSINESS OUTCOMES</p>
                   <p className="upload-instruction">Click to upload files or drag and drop</p>
+                  <p className="upload-limit" style={{ color: '#ff0000', fontSize: '12px', marginTop: '5px' }}>
+                    ⚠️ Maximum file size: 2MB per file
+                  </p>
                 </label>
               </div>
 
