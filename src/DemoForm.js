@@ -357,6 +357,30 @@ const DemoForm = () => {
               <button type="submit" className="demo-submit-btn" disabled={isSubmitting}>
                 {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
+
+              {/* Privacy Notice */}
+              <div className="privacy-notice" style={{
+                marginTop: '20px',
+                padding: '15px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                fontSize: '13px',
+                color: '#666',
+                lineHeight: '1.6'
+              }}>
+                <p style={{ margin: '5px 0' }}>※ 개인정보는 기념품 발송 목적으로만 사용되며 안전하게 관리됩니다</p>
+                <p style={{ margin: '5px 0' }}>※ 상세한 혜택 내용은 OCEANLIFE 공식 사이트에서 확인하세요</p>
+                <p style={{ margin: '5px 0' }}>
+                  ※ 2025년 10월부터 이용 가능한 OCEANLIFE
+                  <a href="https://oceanlife.com" target="_blank" rel="noopener noreferrer" style={{
+                    color: '#1a73e8',
+                    textDecoration: 'underline',
+                    marginLeft: '5px'
+                  }}>
+                    여기를 눌러 확인하세요
+                  </a>
+                </p>
+              </div>
             </form>
 
             {/* Contact Information */}
