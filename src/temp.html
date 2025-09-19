@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,7 +19,7 @@
         background-color: #ffffff;
       }
       .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a73e8 0%, #0c47a1 100%);
         color: white;
         padding: 2rem;
         text-align: center;
@@ -31,38 +31,32 @@
       .content {
         padding: 2rem;
       }
-      .grid {
+      .section {
+        margin-bottom: 2rem;
+      }
+      .section-title {
+        color: #1a73e8;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e0e0e0;
+      }
+      .info-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1rem;
       }
       @media (min-width: 768px) {
-        .grid {
+        .info-grid {
           grid-template-columns: 1fr 1fr;
-          gap: 3rem;
+          gap: 1.5rem;
         }
       }
-      .info-section {
-        background-color: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border-left: 4px solid #667eea;
-      }
-      .info-section h2 {
-        color: #667eea;
-        font-size: 1.25rem;
-        margin-top: 0;
-        margin-bottom: 1rem;
-      }
       .info-item {
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #e0e0e0;
-      }
-      .info-item:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 3px solid #1a73e8;
       }
       .label {
         font-weight: 600;
@@ -76,22 +70,54 @@
         color: #333;
         font-size: 1rem;
       }
-      .message-section {
-        background-color: #fff;
+      .value a {
+        color: #1a73e8;
+        text-decoration: none;
+      }
+      .project-section {
+        background-color: #f0f7ff;
         padding: 1.5rem;
         border-radius: 8px;
-        border: 2px solid #e0e0e0;
+        margin: 1.5rem 0;
       }
-      .message-section h2 {
+      .project-content {
         color: #333;
-        font-size: 1.25rem;
-        margin-top: 0;
-        margin-bottom: 1rem;
-      }
-      .message-content {
-        color: #555;
         white-space: pre-wrap;
         line-height: 1.8;
+      }
+      .files-section {
+        background-color: #fff3cd;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #ffeaa7;
+      }
+      .marketing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .marketing-item {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        text-align: center;
+      }
+      .marketing-label {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+      }
+      .marketing-value {
+        font-weight: bold;
+        color: #333;
+      }
+      .yes {
+        color: #28a745;
+      }
+      .no {
+        color: #dc3545;
       }
       .footer {
         background-color: #f8f9fa;
@@ -102,90 +128,131 @@
         border-top: 1px solid #e0e0e0;
       }
       .footer a {
-        color: #667eea;
+        color: #1a73e8;
         text-decoration: none;
+        font-weight: 600;
       }
       .badge {
         display: inline-block;
         padding: 0.25rem 0.75rem;
-        background-color: #667eea;
+        background-color: #1a73e8;
         color: white;
         border-radius: 20px;
         font-size: 0.875rem;
-        margin-top: 0.5rem;
       }
       .timestamp {
         color: #999;
         font-size: 0.75rem;
-        margin-top: 1rem;
+        margin-top: 2rem;
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>🚢 VMS Holdings - 새로운 문의</h1>
-        <p style="margin: 0.5rem 0 0 0; opacity: 0.9">B2B 해운 솔루션 문의</p>
+        <h1>🚢 VMS Holdings - Demo Request</h1>
+        <p style="margin: 0.5rem 0 0 0; opacity: 0.9">New Demo Request Submission</p>
       </div>
 
       <div class="content">
-        <div class="grid">
-          <!-- 왼쪽 컬럼: 고객 정보 -->
-          <div class="info-section">
-            <h2>📋 고객 정보</h2>
-
+        <!-- Contact Information Section -->
+        <div class="section">
+          <h2 class="section-title">📋 Contact Information</h2>
+          <div class="info-grid">
             <div class="info-item">
-              <div class="label">이름</div>
+              <div class="label">Full Name</div>
               <div class="value">{{from_name}}</div>
             </div>
 
             <div class="info-item">
-              <div class="label">회사명</div>
-              <div class="value">{{company}}</div>
-            </div>
-
-            <div class="info-item">
-              <div class="label">이메일</div>
+              <div class="label">Email Address</div>
               <div class="value">
-                <a
-                  href="mailto:{{from_email}}"
-                  style="color: #667eea; text-decoration: none"
-                  >{{from_email}}</a
-                >
+                <a href="mailto:{{from_email}}">{{from_email}}</a>
               </div>
             </div>
 
             <div class="info-item">
-              <div class="label">전화번호</div>
+              <div class="label">Phone Number</div>
               <div class="value">{{phone}}</div>
             </div>
 
             <div class="info-item">
-              <div class="label">관심 서비스</div>
-              <div class="value">
-                <span class="badge">{{service_type}}</span>
-              </div>
+              <div class="label">Job Title</div>
+              <div class="value">{{job_title}}</div>
             </div>
-          </div>
 
-          <!-- 오른쪽 컬럼: 문의 내용 -->
-          <div class="message-section">
-            <h2>💬 문의 내용</h2>
-            <div class="message-content">{{message}}</div>
+            <div class="info-item">
+              <div class="label">Company/Institution</div>
+              <div class="value">{{company}}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="label">Country</div>
+              <div class="value">{{country}}</div>
+            </div>
           </div>
         </div>
 
-        <div class="timestamp">문의 접수 시간: {{current_date}}</div>
+        <!-- Project Information Section -->
+        <div class="section">
+          <h2 class="section-title">💼 Project Information</h2>
+          <div class="project-section">
+            <div class="label">Project Description</div>
+            <div class="project-content">{{project_description}}</div>
+          </div>
+        </div>
+
+        <!-- Attachments Section -->
+        <div class="section">
+          <h2 class="section-title">📎 Attachments</h2>
+          <div class="files-section">
+            <div class="value">{{files_info}}</div>
+          </div>
+        </div>
+
+        <!-- Marketing Preferences Section -->
+        <div class="section">
+          <h2 class="section-title">📧 Marketing Preferences</h2>
+          <div class="marketing-grid">
+            <div class="marketing-item">
+              <div class="marketing-label">Product Updates</div>
+              <div class="marketing-value {{#if opt_product_updates}}yes{{else}}no{{/if}}">
+                {{opt_product_updates}}
+              </div>
+            </div>
+            <div class="marketing-item">
+              <div class="marketing-label">Sales Outreach</div>
+              <div class="marketing-value {{#if opt_sales_outreach}}yes{{else}}no{{/if}}">
+                {{opt_sales_outreach}}
+              </div>
+            </div>
+            <div class="marketing-item">
+              <div class="marketing-label">Event Invitations</div>
+              <div class="marketing-value {{#if opt_events}}yes{{else}}no{{/if}}">
+                {{opt_events}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timestamp">
+          Request received at: {{current_date}}
+        </div>
       </div>
 
       <div class="footer">
         <p>
-          이 이메일은 VMS Holdings 웹사이트의 문의 폼을 통해 자동으로
-          전송되었습니다.
+          This email was automatically sent from the VMS Holdings Demo Request Form.
         </p>
-        <p>빠른 시일 내에 담당자가 연락드리겠습니다.</p>
+        <p>Please respond to this request within 24 hours.</p>
         <p>
-          <a href="mailto:{{from_email}}">답변하기 →</a>
+          <a href="mailto:{{from_email}}">Reply to {{from_name}} →</a>
+        </p>
+        <p style="margin-top: 1rem;">
+          <strong>VMS Holdings</strong><br/>
+          Email: vmsholdings@vmsforsea.com<br/>
+          Phone: +82 51-403-0790
         </p>
       </div>
     </div>
