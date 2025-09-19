@@ -47,8 +47,8 @@ const DemoForm = () => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const MAX_FILE_SIZE = 30 * 1024; // 30KB limit (EmailJS has 50KB variable limit)
-    const MAX_TOTAL_SIZE = 30 * 1024; // Total 30KB limit to avoid EmailJS 413 error
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB limit per file
+    const MAX_TOTAL_SIZE = 2 * 1024 * 1024; // Total 2MB limit
 
     // Calculate current total size
     const currentTotalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
@@ -58,12 +58,12 @@ const DemoForm = () => {
 
     for (const file of files) {
       if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push(`${file.name} exceeds 30KB limit (EmailJS restriction)`);
+        errorMessages.push(`${file.name} exceeds 2MB limit`);
         continue;
       }
 
       if (currentTotalSize + file.size > MAX_TOTAL_SIZE) {
-        errorMessages.push(`Total file size would exceed 30KB limit (EmailJS restriction)`);
+        errorMessages.push(`Total file size would exceed 2MB limit`);
         break;
       }
 
