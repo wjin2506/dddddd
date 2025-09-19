@@ -369,16 +369,27 @@ const DemoForm = () => {
                 lineHeight: '1.6'
               }}>
                 <p style={{ margin: '5px 0' }}>※ 개인정보는 기념품 발송 목적으로만 사용되며 안전하게 관리됩니다</p>
-                <p style={{ margin: '5px 0' }}>※ 상세한 혜택 내용은 OCEANLIFE 공식 사이트에서 확인하세요</p>
                 <p style={{ margin: '5px 0' }}>
-                  ※ 2025년 10월부터 이용 가능한 OCEANLIFE
-                  <a href="https://oceanlife.com" target="_blank" rel="noopener noreferrer" style={{
+                  ※ 상세한 혜택 내용은
+                  <a href="https://link-coral-51415008.figma.site/" target="_blank" rel="noopener noreferrer" style={{
                     color: '#1a73e8',
                     textDecoration: 'underline',
-                    marginLeft: '5px'
+                    marginLeft: '3px'
                   }}>
-                    여기를 눌러 확인하세요
+                    OCEANLIFE 공식 사이트
                   </a>
+                  에서 확인하세요
+                </p>
+                <p style={{ margin: '5px 0' }}>
+                  ※ 2025년 10월부터 이용 가능한 OCEANLIFE
+                  <a href="https://link-coral-51415008.figma.site/" target="_blank" rel="noopener noreferrer" style={{
+                    color: '#1a73e8',
+                    textDecoration: 'underline',
+                    marginLeft: '3px'
+                  }}>
+                    여기를 눌러
+                  </a>
+                  확인하세요
                 </p>
               </div>
             </form>
