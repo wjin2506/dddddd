@@ -29,10 +29,12 @@ const DemoForm = () => {
     localStorage.setItem('demo-formData', JSON.stringify(formData));
   }, [formData]);
 
-  // EmailJS 초기화
+  // EmailJS 초기화 - 컴포넌트 로드 시 바로 실행
   useEffect(() => {
     // EmailJS Public Key 초기화
-    emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY || "Bu5XOwkzSj9fTCs");
+    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || "Bu5XOwkzSj9fTCs_I";
+    console.log('Initializing EmailJS with public key:', publicKey);
+    emailjs.init(publicKey);
   }, []);
 
   const handleInputChange = (e) => {
@@ -105,7 +107,8 @@ const DemoForm = () => {
       const result = await emailjs.send(
         process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_oh96wzb', // VMS Holdings Gmail Service
         process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_53307ep', // Contact Us Template
-        emailData
+        emailData,
+        process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Bu5XOwkzSj9fTCs_I' // Public Key
       );
 
       console.log('Email sent successfully:', result);
